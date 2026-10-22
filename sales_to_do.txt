@@ -1,0 +1,1125 @@
+﻿# %% [markdown]
+# # Data Science toolkit and application
+# # Case study 1 : Explore data analysis fundamentals
+# ## Basic data manipulation and visualization
+#  
+# 
+# By this case study, you will be able to:
+# - Set up Python environment and VS Code, using environment management tools like virtualenv or conda
+# - Load and explore a dataset using Python basics and Pandas, including basic DataFrame operations
+# - Implement error handling when loading and exploring a dataset
+# - Perform simple aggregations on a dataset
+# - Create basic visualizations with Matplotlib
+# - Implement simple linear regression for prediction
+# - Use Git for version control
+#     
+# **Documentation references:**
+# - [Numpy for beginners](https://numpy.org/devdocs/user/absolute_beginners.html)  
+# - [Getting started with pandas](https://pandas.pydata.org/docs/getting_started/index.html)
+
+# %%
+# Importing numpy package
+import numpy as np
+
+# %% [markdown]
+# ***
+# # 1. Pandas package discovery
+# **Pandas** is a Python package providing fast, flexible, and expressive data structures designed to make working with “relational” or “labeled” data both easy and intuitive. It aims to be the fundamental high-level building block for doing practical, real-world data analysis in Python. Additionally, it has the broader goal of becoming the most powerful and flexible open source data analysis/manipulation tool available in any language. It is already well on its way toward this goal.
+# 
+# 
+# Pandas is well suited for many different kinds of data:
+# * Tabular data with heterogeneously-typed columns, as in an SQL table or Excel spreadsheet
+# * Ordered and unordered (not necessarily fixed-frequency) time series data.
+# * Arbitrary matrix data (homogeneously typed or heterogeneous) with row and column labels
+# * Any other form of observational / statistical data sets. The data need not be labeled at all to be placed into a pandas data structure
+# 
+# 
+# The two primary data structures of pandas, <a href="https://pandas.pydata.org/docs/reference/api/pandas.Series.html#pandas.Series" target="_blank">Series</a>  (1-dimensional) and <a href="https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html#pandas.DataFrame" target="_blank">DataFrame</a>  (2-dimensional), handle the vast majority of typical use cases in finance, statistics, social science, and many areas of engineering.
+# Pandas is built on top of NumPy and is intended to integrate well within a scientific computing environment with many other 3rd party libraries.
+
+# %% [markdown]
+# ## 1.1 Getting started with Pandas 
+# 
+# To load the pandas package and start working with it, you need to import the package. The community agreed alias for pandas is pd, so loading pandas as pd is assumed standard practice for all of the pandas documentation.
+# 
+# This can be easily done with this import statement in Python. 
+# Learn how to do it <a href="https://pandas.pydata.org/docs/getting_started/intro_tutorials/01_table_oriented.html" target="_blank">here</a>, then fill the code cell below:
+# 
+
+# %%
+# Importing Pandas package
+import pandas as pd
+
+# %% [markdown]
+# <a href="        " target="_blank">        </a>
+# 
+
+# %% [markdown]
+# ### What kind of data does pandas handle?
+# 
+# Pandas can handle **dataframes**
+# A Pandas DataFrame is a 2 dimensional data structure, like a 2 dimensional array, or a table with rows and columns.
+# A DataFrame is thus a dat astructure that can store data of different types (including characters, integers, floating point values, categorical data and more) in columns.
+# 
+# You can see more details about Pandas dataframe structure, parameters, and functions in the  <a href=" https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html " target="_blank">       documentation</a>.
+# 
+# <img src="images/pandas_table_dataframe.png" width="500">
+
+# %% [markdown]
+# ### Load and read a tabular data
+# Pandas provides the `read_*()` function to read data stored as a `*` file into a pandas DataFrame. Pandas supports many different file formats or data sources out of the box (csv, excel, sql, json, parquet, …), each of them with the prefix `read_*`.
+# 
+# ![](images/pandas_read_table.png)
+# 
+# Make sure to always have a check on the data after reading in the data. When displaying a DataFrame, the first and last 5 rows will be shown by default.
+# 
+# Now, we would like to load and read the sales dataset. This dataset contains information about the purchase information (product, quantity, price, address...).
+# In the code cell below, read the `Sales_Analysis.csv` dataset, display first and last rows.
+# 
+# **Documentation references:**
+# - [pandas.read_csv()](https://pandas.pydata.org/docs/reference/api/pandas.read_csv.html)
+# - [Data loading best practices](https://pandas.pydata.org/docs/user_guide/io.html)
+# - [File path handling in pandas](https://pandas.pydata.org/docs/user_guide/io.html#reading-files)
+# 
+
+# %% [markdown]
+# **Exercise:** Load and examine sales transaction dataset
+# 
+# Sales transaction data provides insights into customer behavior, product performance, and revenue patterns. Proper data loading establishes the foundation for all subsequent analysis by ensuring data integrity and understanding the dataset structure.
+# 
+# Load the sales dataset. This creates a DataFrame object that allows efficient manipulation and analysis of tabular data. Always verify successful loading by examining the dataset structure immediately after import.
+
+# %%
+# TODO Read the Sales_Analysis.csv file
+df=pd.read_csv(r'../data/sales.csv')
+
+# %%
+# Display the pandas dataframe 
+df.head()
+
+# %%
+# TODO Display the first 8 rows of a pandas DataFrame.
+df.head(8)
+
+# %%
+# TODO Show the last 5 rows in the dataset with the tail() method.
+df.tail(5)
+
+# %% [markdown]
+# ## 1.2 Dataset Structure Analysis
+# 
+# Understanding dataset properties is crucial before any analysis. Sales data often contains mixed data types due to inconsistent data entry, requiring careful examination to identify appropriate preprocessing steps. Proper data type identification ensures mathematical operations work correctly and prevents analysis errors.
+# 
+# **Documentation references:**
+# - [pandas.DataFrame.shape](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.shape.html)
+# - [pandas.DataFrame.dtypes](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.dtypes.html)
+# - [pandas.DataFrame.info()](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.info.html)
+# - [Understanding pandas data types](https://pandas.pydata.org/docs/user_guide/basics.html#basics-dtypes)
+
+# %% [markdown]
+# **Exercise:** Examine dataset dimensions and structure
+# 
+# Dataset dimensionality reveals the scale of your analysis challenge. Understanding how many transactions (rows) and variables (columns) you're working with helps estimate processing requirements and identifies potential sampling needs for large datasets.
+# 
+# Check the dataset dimensions using `.shape` to understand the volume of data available for analysis. This tuple shows (number_of_rows, number_of_columns) and helps assess whether you have sufficient data for meaningful insights.
+
+# %%
+# TODO Check the number of rows and columns in the dataset
+df.shape
+
+# %% [markdown]
+# **Exercise:** Analyze column data types
+# 
+# Data type identification is critical for sales analysis because columns may appear numeric but actually contain text, preventing mathematical operations. The `dtypes` property reveals how pandas interprets each column, while mixed-type columns default to 'object' type.
+# 
+# Examine column data types using `.dtypes` to identify which columns contain numeric data (for calculations), text data (for categorization), or mixed types (requiring cleaning). Pay attention to columns that should be numeric but appear as 'object' type - these often contain data quality issues.
+
+# %%
+# TODO Check the datatypes of the dataset
+df.dtypes
+
+# %% [markdown]
+# **Exercise:** Generate comprehensive dataset summary
+# 
+# The `.info()` method provides a complete overview including data types, missing values, and memory usage. This summary helps identify data quality issues and planning cleaning strategies before analysis begins.
+# Use `.info()` to get detailed information about each column including non-null counts (revealing missing data), data types, and memory usage. This comprehensive view helps prioritize which columns need cleaning or type conversion.
+
+# %%
+# TODO Print a concise summary of a DataFrame
+df.info()
+
+# %% [markdown]
+# **When printing precise information, please notice the following items:**
+# -  `<class 'pandas.core.frame.DataFrame'>`: Indicates that this is a pandas DataFrame.
+# - `RangeIndex: Shows the index range of the DataFrame.
+# - `Data columns` (here, total 6 columns): Indicates that there are 6 columns in the DataFrame.
+# - `dtypes`: Displays the data types of each column.
+# - `memory usage`: Represents the memory usage of the DataFrame.
+
+# %% [markdown]
+# ## 1.3 Data Cleaning and Preprocessing
+# 
+# Real-world sales data frequently contains missing values and duplicate records that can skew analysis results. Missing data may occur due to system errors, incomplete customer information, or data transmission issues. Duplicate transactions can artificially inflate sales metrics and lead to incorrect business insights. Systematic data cleaning ensures analysis accuracy and reliability.
+# 
+# **Documentation references:**
+# - [pandas.isnull()](https://pandas.pydata.org/docs/reference/api/pandas.isnull.html)
+# - [pandas.DataFrame.dropna()](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.dropna.html)
+# - [pandas.DataFrame.duplicated()](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.duplicated.html)
+# - [pandas.DataFrame.drop_duplicates()](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.drop_duplicates.html)
+# - [Missing data handling guide](https://pandas.pydata.org/docs/user_guide/missing_data.html)
+
+# %% [markdown]
+# **Exercise:** Comprehensive data quality assessment and cleaning
+# 
+# Data quality directly impacts analysis reliability. Missing values can bias statistical calculations, while duplicate records inflate metrics and distort business insights. A systematic cleaning approach identifies these issues and removes problematic records while preserving data integrity.
+# 
+# Perform a complete data quality assessment by first counting missing values in each column. Remove rows containing missing values to ensure complete records for analysis. 
+# 
+# Next, identify duplicate transactions, then remove them. Finally, verify the cleaning effectiveness by rechecking missing values and duplicates, and examine the new dataset dimensions using to understand how much data was removed during the cleaning process.
+
+# %%
+# TODO Count the number of Null values for each column
+df.isnull().sum()
+
+# %%
+# TODO Remove null values from the dataset
+df=df.dropna(how='all')
+
+# %%
+# TODO Check if missing rows have been removed
+df.isna().sum()
+
+# %%
+# TODO Check for the duplicate values in the dataset
+df[df.duplicated(keep='first')].value_counts()
+
+# %%
+# TODO Drop duplicates
+df=df.drop_duplicates()
+
+# %%
+# TODO Check again
+df[df.duplicated(keep=False)].value_counts()
+
+
+
+# %%
+# TODO Check the new dimensions of the dataframe
+df.shape
+
+# %% [markdown]
+# ***
+# # 2. Focus on Data Cleaning and Preparation
+# 
+# Let us make a small focus on a specific row, number 519, let us show its content.
+# We can notice that the values of the columns seem to be wrong. This kind of wrong data is difficult to detect, as it is impossible to check each row in the dataframe manually. 
+# One of the main steps to avoid this kind of data, is to convert colums types to the right type that is consistent related to our understanding of the data. Let us do that!
+# 
+
+# %%
+# TODO Display the row 519
+df.loc[519]
+
+# %%
+df.head()
+
+# %% [markdown]
+# ## 2.1 Data Type Conversion for Analysis
+# 
+# Pandas automatically assigns data types when loading data, but mixed content often results in all columns being classified as 'object' type - the most general but least useful for analysis. Sales data requires proper numeric types for calculations (revenue, quantities) and datetime types for temporal analysis (trends, seasonality). Converting to appropriate data types enables mathematical operations and unlocks analytical capabilities.
+# 
+# **Documentation references:**
+# - [pandas.to_numeric()](https://pandas.pydata.org/docs/reference/api/pandas.to_numeric.html)
+# - [pandas.to_datetime()](https://pandas.pydata.org/docs/reference/api/pandas.to_datetime.html)
+# - [Data type conversion guide](https://pandas.pydata.org/docs/user_guide/basics.html#basics-dtypes)
+# - [Error handling in type conversion](https://pandas.pydata.org/docs/reference/api/pandas.to_numeric.html#pandas.to_numeric)
+
+# %% [markdown]
+# **Exercise:** Convert columns to appropriate data types for analysis
+# 
+# Proper data types are essential for sales analysis. Numeric columns enable revenue calculations and statistical analysis, while datetime columns allow temporal pattern identification. The `errors='coerce'` parameter handles invalid data by converting problematic values to `NaN`, revealing data quality issues while preserving valid records.
+# 
+# Convert the following columns to their appropriate types using pandas conversion functions: transform `Order ID`, `Quantity Ordered`, and `Price Each` to numeric types with invalid entries handling (see above). Convert `Order Date` to datetime type using the same error handling. After conversion, verify the changes.
+
+# %%
+# TODO Convert text to numeric values
+cols_to_convert = ['Order ID', 'Quantity Ordered', 'Price Each']
+df[cols_to_convert] = df[cols_to_convert].apply(pd.to_numeric, errors='coerce')
+
+
+
+#Convert Order date to datetime type
+df['Order Date']=pd.to_datetime (df['Order Date'], errors = 'coerce')
+
+
+# %%
+# TODO Check that the conversion has been applied correctly
+df.dtypes
+
+# %% [markdown]
+# Now, we can check again the missign values. We will notice that one row contains now missing values 'NaN', it is the row 519! One of the ways to isolate the rows with missing values, is to put them in a new dataframe 
+
+# %%
+# TODO Check for missing values again
+df.isna().sum()
+
+
+
+# %% [markdown]
+# One of the ways to isolate the rows with missing values, is to put them in a new dataframe. Let us then drop rows with missing values and check that!
+
+# %%
+# TODO Create and display a new DataFrame with rows that have at least one NaN value
+df_na = df[df.isna().any(axis=1)]
+
+# %%
+df_na
+
+# %%
+# TODO Remove rows with NaN values 
+df.dropna(axis=0, how='any', inplace=True)
+
+# %%
+# TODO Check if missing rows have been removed again
+df.isna().sum()
+
+# %%
+df.dtypes
+
+# %% [markdown]
+# ## 2.2 Extracting and Creating Variables
+# 
+# In our Sales dataset, we may need to perform analysis and statistics related to a specific month of the year, to a specific city or state, to a specifc category of purchased products. 
+# However, the current dataset with current columns does not allow to perform such analysis easily. 
+# For this reason, usually, one of the pre-processing steps of a dataset is to create new columns based on existing ones. New colums can be used then directly.
+# Let us make a focus on the columns meaning and content then create some new colums!
+
+# %% [markdown]
+# ### 2.2.1 Temporal Feature Engineering
+# 
+# Sales data exhibits strong temporal patterns that drive business insights: seasonal trends affect product demand, monthly cycles reflect payroll patterns, and daily variations show shopping behaviors. Extracting temporal components from datetime data transforms timestamps into analytical features that reveal these hidden patterns and enable time-based analysis such as trend identification, seasonal forecasting, and peak period optimization.
+# 
+# **Documentation references:**
+# - [pandas.Series.dt accessor](https://pandas.pydata.org/docs/reference/api/pandas.Series.dt.year.html)
+# - [Time series functionality](https://pandas.pydata.org/docs/user_guide/timeseries.html)
+# - [Datetime properties extraction](https://pandas.pydata.org/docs/reference/api/pandas.Series.dt.html)
+# 
+
+# %% [markdown]
+# **Exercise:** Extract temporal features for time-based analysis
+# 
+# Temporal feature extraction transforms datetime stamps into analytical components that reveal business patterns. Year enables long-term trend analysis, month identifies seasonal variations, day captures monthly cycles, and time reveals daily shopping patterns. These features become essential variables for understanding customer behavior and optimizing business operations.
+# 
+# Extract temporal components from the `Order Date` column using pandas datetime accessor methods. Create new columns for `year`, `month`, `day`, and `time` using `.dt.year`, `.dt.month`, `.dt.day`, and `.dt.time` respectively. These extracted features will enable temporal analysis such as identifying peak shopping months, understanding daily sales patterns, and tracking year-over-year growth trends.
+# 
+
+# %%
+# TODO Create New Column year,month,day,time
+df['Year'] = df["Order Date"].dt.year
+df['Month'] = df['Order Date'].dt.month
+df['Day'] = df['Order Date'].dt.day
+df['Time'] = df['Order Date'].dt.time
+
+# %%
+# Display your dataframe
+df.head()
+
+# %% [markdown]
+# ### 2.2.2 Numerical Data Transformation
+# 
+# Price data often contains decimal precision that may exceed analytical needs. Converting to integer format simplifies calculations, reduces memory usage, and can improve performance for large datasets. However, this transformation should be applied thoughtfully as it permanently removes decimal precision and may not be appropriate for all financial analyses where exact amounts matter.
+# 
+# **Documentation references:**
+# - [pandas.DataFrame.astype()](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.astype.html)
+# - [Data type conversion methods](https://pandas.pydata.org/docs/user_guide/basics.html#basics-astype)
+# - [Numeric data handling](https://pandas.pydata.org/docs/user_guide/basics.html#basics-dtypes)
+
+# %% [markdown]
+# **Exercise:** Convert price data to integer format
+# 
+# Integer conversion of price data creates simplified numerical values suitable for certain types of analysis where decimal precision is not critical. This transformation can be useful for categorical price analysis, simplified visualizations, or when working with systems that require whole numbers. The `.astype('int')` method performs this conversion by truncating decimal values.
+# 
+# Create a new column called `Price_integer` that contains the price values converted to integer format. This transformation will remove decimal places and create whole number representations of the original prices for simplified analysis scenarios.
+
+# %%
+# TODO Convert the 'Price Each' column to integer type
+df['Price_integer'] = df['Price Each'].astype('int')
+#print(type(df['Time'].iloc[0]))
+
+# %% [markdown]
+# ### 2.2.3 Geographic Data Extraction
+# 
+# Geographic analysis of sales data requires extracting location identifiers from address strings. ZIP codes enable regional sales analysis, delivery optimization, and demographic targeting. In this dataset, ZIP codes are consistently formatted as the last 5 characters of the address string, making string slicing an effective extraction method for geographic segmentation and regional performance analysis.
+# 
+# **Documentation references:**
+# - [Working with text data in pandas](https://pandas.pydata.org/docs/user_guide/text.html)
+# - [String accessor methods](https://pandas.pydata.org/docs/reference/api/pandas.Series.str.html)
+# - [String slicing operations](https://pandas.pydata.org/docs/user_guide/text.html#extracting-substrings)
+
+# %% [markdown]
+# **Exercise:** Extract ZIP codes for geographic analysis
+# 
+# ZIP code extraction enables geographic sales analysis by providing standardized location identifiers. These codes allow grouping transactions by region, analyzing delivery patterns, and identifying high-performing geographic markets. String slicing with negative indexing efficiently extracts the last 5 characters regardless of address length variations.
+# 
+# Create a new column called `Pincodes` that contains the ZIP codes extracted from the `Purchase Address` column. Use string slicing with to extract the last 5 characters from each address string, which represent the ZIP codes in this dataset's address format.
+
+# %%
+# TODO Create a new column and store the PIN Codes from the Address column
+df['Pincodes']=df['Purchase Address'].str[-5:]
+
+# %%
+# Display your dataframe
+df.head()
+
+# %% [markdown]
+# ### 2.2.4 Address Parsing for City Extraction
+# 
+# City-level analysis is crucial for understanding regional sales performance, distribution logistics, and market penetration. Address strings typically follow standardized formats with comma-separated components. By parsing these structured addresses, we can extract city names for geographic analysis, enabling insights into urban vs suburban performance, regional preferences, and market concentration patterns.
+# 
+# **Documentation references:**
+# - [String split operations](https://pandas.pydata.org/docs/user_guide/text.html#splitting-and-replacing-strings)
+# - [pandas.Series.str.split()](https://pandas.pydata.org/docs/reference/api/pandas.Series.str.split.html)
+# - [Text data manipulation guide](https://pandas.pydata.org/docs/user_guide/text.html)
+# - [DataFrame concatenation](https://pandas.pydata.org/docs/reference/api/pandas.concat.html)
+
+# %% [markdown]
+# **Exercise:** Parse addresses to extract city information
+# 
+# Address parsing transforms unstructured text into structured geographic data for analysis. The comma-delimited format allows systematic extraction of address components, with city names typically appearing as the second element after street information. This extraction enables city-level sales analysis and regional performance comparisons.
+# 
+# Parse the `Purchase Address` column by splitting on comma separators to create separate columns for address components. Create a temporary DataFrame to hold the split results, rename the appropriate column to 'City', then concatenate this city information back to the main DataFrame to add the city column alongside existing data.
+
+# %%
+# TODO Display the Purchase Address column from the dataframe
+df['Purchase Address']
+
+# %%
+# TODO Split the Purchase Address column into Street, State, and Zip Code
+df_split = df['Purchase Address'].str.split(',', expand=True)
+
+# %%
+# TODO Rename the State column to City
+df_split.columns = ['Street', 'City', 'Postal' ]
+
+# %%
+# #TODO Concatenate the original dataframe with the new dataframe containing City information (concatenate along columns)
+ 
+df=pd.concat([df, df_split], axis=1)
+
+# %%
+df.head()
+
+# %% [markdown]
+# ### 2.2.5 Product Categorization Strategy
+# 
+# Large transaction datasets often contain repetitive product purchases that benefit from categorical grouping. Instead of analyzing hundreds of individual product SKUs, grouping similar products into categories (Phones, Accessories, Monitors, Laptops) enables higher-level business insights such as category performance, cross-selling opportunities, and inventory optimization. Text pattern matching provides an efficient method for automated categorization based on product naming conventions.
+# 
+# **Documentation references:**
+# - [pandas.unique()](https://pandas.pydata.org/docs/reference/api/pandas.unique.html)
+# - [Regular expressions in Python](https://docs.python.org/3/library/re.html)
+# - [String pattern matching](https://pandas.pydata.org/docs/user_guide/text.html#testing-for-strings-that-match-or-contain-a-pattern)
+# - [Apply function usage](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.apply.html)
+# 
+
+# %% [markdown]
+# **Exercise:** Analyze product diversity and implement categorization
+# 
+# Understanding product variety helps determine the appropriate level of analysis granularity. A dataset with thousands of unique products benefits from categorical grouping, while limited product variety might be analyzed at the individual item level. Pattern-based categorization automates the grouping process using regular expressions to identify product types from naming conventions.
+# 
+# First, examine the product diversity to display distinct items and understand if categorization could be beneficial.
+
+# %%
+# TODO Get all distinct values of products
+df['Product'].unique()
+
+# %% [markdown]
+# **Exercise:** Implement pattern-based product categorization system
+# 
+# Automate categorization using regular expressions to enable systematic grouping while handling case variations and partial matches efficiently.
+
+# %% [markdown]
+# The dataset contains a limited number of unique products that appear frequently in transactions. Upon examining these products, clear categorization patterns emerge based on their names:
+# 
+# - Products containing the word "phone" can be categorized as **Phones**
+# - Items labeled with "Laptop" belong to the **Laptop** category
+# - Products with "Monitor" in their name fall under the **Monitors** category
+# - Items containing terms like "Cable", "Headphones", or "Batteries" can be grouped as **Accessories**
+# 
+# This natural categorization allows for more effective analysis of purchasing patterns across product types rather than individual items.
+# 
+# First, define a patterns dictionary that maps category names to regular expression patterns for keyword matching. 
+
+# %%
+# TODO Define a dictionary with product categories and their corresponding regex patterns
+patterns = {
+    'Accessories' : r'Cable|Headphone|Batteries',
+    'Phones' : r'phone',
+    'Laptop' : r'laptop',
+    'Monitors' : r'Monitor'
+    }
+
+# %%
+print (patterns)
+
+# %% [markdown]
+# Create a `categorize_product()` function that uses `re.search()` with case-insensitive matching to identify product categories, returning 'Unknown' for null values and 'Other' for unmatched products. 
+
+# %%
+# TODO Import re package for dealing efficiently with regular expressions
+# Create a categorize_product function to categorize products based on patterns
+import re
+def categorize_product(product):
+    """ Categorize products based on predefined patterns.
+        
+        Parameters:
+        ----------
+        product : str
+            The product name to categorize.
+
+        Returns:
+        -------
+        str
+            The category of the product or 'Unknown' if not found.
+    """
+    if pd.isna(product) or product is None:
+        return 'Unknown'
+
+    product_str = str(product)
+
+    for category, pattern in patterns.items():
+        if re.search(pattern, product_str, re.IGNORECASE):
+            return category
+
+    return 'Other'
+
+# %% [markdown]
+# Apply this function to the entire `Product` column using `.apply()` to create a new `Category` column, then verify the categorization results by examining the unique categories created.
+
+# %%
+# TODO Create a new column 'Category' based on 'Product' column (use apply method and the categorize_product function)
+df['Category'] = df['Product'].apply(categorize_product)
+
+# %% [markdown]
+# Let us check the new categories, the unique ones 
+
+# %%
+# TODO Display the unique categories in the 'Category' column
+df['Category'].unique()
+
+# %%
+# TODO Display all rows where the Category is 'Other'
+df[df['Category'] == 'Other']
+
+# %%
+# TODO Display the first 10 rows of the dataframe 
+df.head(10)
+
+# %% [markdown]
+# ***
+# # 3. Simple descriptive statistical analysis 
+
+# %% [markdown]
+# Here we apply basic statistical methods to summarize and understand data patterns. Students will learn to calculate central tendencies, dispersions, and simple aggregations to extract meaningful insights.
+# 
+# Some analysis require grouping by some values (same as in SQL). Learn more about  [grouping](https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html#splitting-an-object-into-groups) operation.
+# 
+# **Exercise**: What was the best month for sales? How much was earned that month? 
+
+# %%
+# TODO Group by month and sum the Price_integer column to find the best month
+month_sale=df.groupby('Month')['Price_integer'].sum().reset_index().sort_values(by='Price_integer', ascending=False)
+
+# %%
+# TODO Sort the best_month DataFrame by Price_integer in descending order
+month_sale
+
+# %% [markdown]
+# ***
+# # 4. Simple visualization
+# 
+# Exploratory data analysis relies heavily on effective visualization to reveal hidden patterns, trends, and relationships within datasets. While statistical summaries provide numerical insights, visual representations enable intuitive understanding of data distributions, temporal patterns, and categorical relationships. However, creating effective data visualizations requires more than just plotting data points—it demands thoughtful design choices that follow established principles for clear communication and accurate interpretation.
+# 
+# **Documentation references:**
+# - [Seaborn documentation](https://seaborn.pydata.org) - High-level interface for statistical data visualization
+# - [Matplotlib documentation](https://matplotlib.org) - Comprehensive library for creating static, animated, and interactive visualizations in Python
+# - [Seaborn tutorial gallery](https://seaborn.pydata.org/examples/index.html) - Examples of different plot types and styling options
+# - [Matplotlib tutorials](https://matplotlib.org/stable/tutorials/index.html) - Comprehensive guides for visualization techniques
+# 
+# 
+
+# %%
+# First, let's import the libraries
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+# %% [markdown]
+# ## The Four Pillars of Quality Data Visualization
+# 
+# Based on "Storytelling with Data" by Cole Nussbaumer Knaflic (can be borrowed from the school library), every effective visualization must address four fundamental principles:
+# 
+# ### 1. **Choose the Appropriate Visual**
+# The type of chart you select should match the nature of your data and your analytical goal. For sales data:
+# 
+# - **Categorical comparisons** → Use horizontal bar plots for comparing performance across categories
+#   - *Example:* Revenue by product category (Phones vs Laptops vs Accessories)
+#   - *Why horizontal bar plots?* Category names are often long and read better horizontally, with clear visual comparison of discrete categories
+# 
+# - **Time series trends** → Use line plots for continuous temporal patterns
+#   - *Example:* Monthly sales evolution over the year
+#   - *Why line plots?* Show progression and trends over time, connecting related time periods
+# 
+# - **Temporal distribution analysis** → Use histograms for understanding time-based frequency patterns
+#   - *Example:* Distribution of orders by hour of day or day of week
+#   - *Why histograms?* Reveal peak shopping hours, customer behavior patterns, and temporal concentration
+# 
+# - **Relationship exploration** → Use scatter plots for examining correlations
+#   - *Example:* Price vs Quantity relationship to identify bulk purchase patterns
+#   - *Why scatter plots?* Each transaction is a discrete point, revealing patterns without implying false continuity
+# 
+# ### 2. **Eliminate Clutter** 
+# Remove any visual element that doesn't add informational value:
+# - **Grid lines** → Visual noise that distracts from data
+# - **Unnecessary borders** → Chart boxes that don't enhance understanding  
+# - **Redundant elements** → Anything that creates cognitive load without benefit
+# 
+# ### 3. **Focus Attention**
+# Use visual hierarchy to guide your audience's eye to what matters most:
+# - **Color strategy** → Use accessible, colorblind-friendly palettes
+# - **Emphasis techniques** → Highlight important elements while de-emphasizing context
+# - **Contrast** → Create clear distinction between signal and background
+# 
+# ### 4. **Ground Principle (Gestalt)**
+# Ensure your visualization has proper foundations for interpretation:
+# - **Clear titles** → Descriptive and informative
+# - **Axis labels with units** → Never leave audience guessing what they're looking at
+# - **Consistent typography** → Professional hierarchy and readability
+# - **Contextual references** → Health thresholds, benchmarks, or comparison points
+
+# %% [markdown]
+# ## Global Configuration Strategy
+# 
+# To implement these principles consistently, we establish global styling parameters that automatically apply good design practices:
+
+# %%
+# Set global seaborn style - clean background without grid
+sns.set_style("white", {
+    "axes.grid": False,           # Remove grid lines
+    "axes.spines.left": True,     # Keep left spine
+    "axes.spines.bottom": True,   # Keep bottom spine
+    "axes.spines.top": False,     # Remove top spine
+    "axes.spines.right": False,   # Remove right spine
+    "axes.linewidth": 1.2,        # Slightly thicker axis lines
+})
+
+# Set inclusive and colorblind-friendly palette
+# Using 'colorblind' palette which is accessible to colorblind users
+sns.set_palette("colorblind")
+
+# %% [markdown]
+# **Why these choices?**
+# - **"white" background** → Maximum contrast for data visibility
+# - **Selective spines** → Keep only essential reference lines (left & bottom)
+# - **No grid by default** → Reduces visual noise, lets data stand out
+# - **Colorblind palette** → Ensures accessibility for ~8% of population with color vision deficiency
+# - **Thicker axis lines** → Subtle emphasis on data boundaries without overwhelming
+
+# %% [markdown]
+# **Exercise:** Visualize monthly sales performance
+# 
+# Understanding seasonal sales patterns helps identify peak business periods and optimize marketing strategies. Monthly sales analysis reveals customer behavior patterns, seasonal trends, and business cycle variations that inform strategic decisions. Clear visualization with proper month labeling ensures easy interpretation of temporal business patterns.
+# 
+# Create a bar plot to visualize the monthly sales performance data you calculated earlier. Use appropriate figure sizing for readability, clear axis labeling, and convert numeric months to readable three-letter month abbreviations (Jan, Feb, Mar, etc.) for professional presentation. Add a descriptive title that clearly communicates what the visualization shows.
+# 
+# 
+# **Documentation references:**
+# - [sns.barplot()](https://seaborn.pydata.org/generated/seaborn.barplot.html) - Create bar plots for categorical data
+# - [plt.figure()](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.figure.html) - Set figure size and properties
+# - [plt.xticks()](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.xticks.html) - Customize x-axis tick labels
+
+# %% [markdown]
+# **Exercise**: Let us show visually the results of each month for sales. We can visually notice the best one!
+# Let us use a <a href="
+# https://seaborn.pydata.org/generated/seaborn.barplot.html" target="_blank"> matplotlib</a> barplot to do that!
+# 
+
+# %%
+# TODO Set figure size and plot the monthly sales performance
+import calendar
+import matplotlib.pyplot as plt
+
+plt.figure(figsize= (10,6)
+           )
+# Plotting the monthly sales performance
+month_sale['Month_Name'] = month_sale['Month'].apply(
+    lambda x: calendar.month_abbr[int(x)]
+)
+# Using seaborn's barplot for better aesthetics
+sns.barplot(data=month_sale, x='Month_Name', y='Price_integer')
+# Set the title for the plot
+plt.title("Monthly Sales Performance", fontsize = 16, pad=15)
+# Set labels for x and y axes
+plt.xlabel("Month", fontsize = 12)
+plt.ylabel("Total Sales ($)", fontsize=12)
+# Convert numeric months to readable month names
+# Save with high quality settings
+plt.savefig("monthly_sales_performance.png", dpi = 300, bbox_inches = 'tight')
+# Show the plot
+plt.show()
+
+
+# %% [markdown]
+# **Exercise**: In which city, we purchase the most?
+
+# %%
+# TODO Count the number of products sold in each city
+city_sales = df.groupby('City')['Quantity Ordered'].sum().reset_index().sort_values(by='Quantity Ordered', ascending=False)
+
+city_sales.head()
+
+# %% [markdown]
+# **Exercise**: We need to launch an advertising campaign and target the hours with the most purchases.
+# 
+# What is the distribution of purchases during the different hours of the day? Which hour/s we should target? Propose a visualisation with seaborn.
+# 
+
+# %%
+# TODO Create a new column that contain hour
+df['Hour'] = df['Order Date'].dt.hour
+
+df.head()
+
+# %%
+# TODO Group by Order_hour and count the number of orders for each hour
+hourly_sales=df.groupby('Hour')['Quantity Ordered'].sum().reset_index()
+hourly_sales
+
+# %%
+# TODO Plot the distribution of orders by hour
+plt.figure(figsize = (10,6))
+# Select a visualization adapted for hourly data
+sns.countplot(data=df, x= 'Hour')
+
+# Set labels and title
+plt.title("Distribution of orders by hour", fontsize =12)
+plt.xlabel ("Hour of the day", fontsize = 12)
+plt.ylabel ("Number of Orders", fontsize=12)
+
+plt.xticks(range(0,24))
+
+# Save with high quality settings
+plt.savefig("hourly_orders_distribuiton.png", dpi=300, bbox_inches = 'tight')
+
+plt.show()
+
+
+# %% [markdown]
+# **Exercise**: Which product was sold the least as per your categories and what might be the reason behind that? 
+
+# %%
+# TODO Count the number of products sold in each category
+df.groupby('Category')['Quantity Ordered'].sum().reset_index().sort_values(by='Quantity Ordered', ascending = True)
+
+# %% [markdown]
+# **Exercise:** Create seasonal categorization function
+# 
+# Sales data often exhibits seasonal patterns that affect product demand and customer behavior. Creating a function to categorize months into seasons enables analysis of seasonal trends, helping identify peak periods for different product categories and optimize inventory management strategies.
+# 
+# Create a function called `season()` that takes a numeric month (1-12) as input and returns the corresponding season name as a string. Define four seasons: Spring (March-May), Summer (June-August), Rainy (September-November), and Winter (December-February). Include a comprehensive docstring with parameters, return values, and usage examples following Python documentation standards.
+# 
+# ```python
+# def season(month):
+#     """
+#     Convert a numeric month to its corresponding season.
+#     
+#     This function categorizes months into four seasons based on typical 
+#     meteorological patterns, useful for seasonal sales analysis and trend identification.
+#     
+#     Parameters:
+#     -----------
+#     month : int
+#         Numeric month value (1-12) where 1=January, 2=February, etc.
+#         
+#     Returns:
+#     --------
+#     str
+#         Season name corresponding to the input month:
+#         - 'Spring': March, April, May (months 3-5)
+#         - 'Summer': June, July, August (months 6-8) 
+#         - 'Rainy': September, October, November (months 9-11)
+#         - 'Winter': December, January, February (months 12, 1, 2)
+#     """
+#     # Your implementation here
+# ```
+
+# %%
+# TODO Implement season function
+def season(month):
+    """
+    Convert a numeric month to its corresponding season.
+    
+    This function categorizes months into four seasons based on typical 
+    meteorological patterns, useful for seasonal sales analysis and trend identification.
+    
+    Parameters:
+    -----------
+    month : int
+        Numeric month value (1-12) where 1=January, 2=February, etc.
+        
+    Returns:
+    --------
+    str
+        Season name corresponding to the input month:
+        - 'Spring': March, April, May (months 3-5)
+        - 'Summer': June, July, August (months 6-8) 
+        - 'Rainy': September, October, November (months 9-11)
+        - 'Winter': December, January, February (months 12, 1, 2)
+    """
+    if 3<=month<=5:
+        return 'Spring'
+    elif 6<=month<=8:
+        return 'Summer'
+    elif 9<=month<=11:
+        return 'Rainy'
+    elif month == 12 or month == 1 or month ==2:
+        return 'Winter'
+    else:
+        return 'Unknown'
+
+# %% [markdown]
+# **Exercise**: Which phone is sold most during the Summer season?
+
+# %%
+# TODO Apply the season function to the 'month' column and create a new column 'Season'
+df['Season']=df['Month'].apply(season)
+
+df.head()
+
+# %% [markdown]
+# **Exercise**: Which phone is sold most during the month of March?
+
+# %%
+# TODO Select the rows for the month of March and filter for Phones category to find the most sold product
+df[(df['Month']==3) & (df['Category'] == 'Phones')].groupby('Product')['Quantity Ordered'].sum().reset_index().sort_values(by='Quantity Ordered', ascending = False)
+
+
+# %% [markdown]
+# **Exercise**: Which headphones are the most expensive?
+
+# %%
+v = df[(df['Category'] == 'Accessories') & (df['Product'].str.contains('phone', case=False, na=False))]\
+.groupby('Product')['Price_integer'].mean().reset_index()\
+.sort_values(by='Price_integer', ascending=False)
+v
+
+
+# %%
+# TODO Select the rows for the Phones category and sort by price to find the most expensive phone
+df[df['Category']== 'Phones'].groupby('Product')['Price_integer'].mean().reset_index().sort_values(by='Price_integer', ascending=False)
+
+# %% [markdown]
+# **Exercise**: Which product in every category in more likely to be ordered in bulk?
+
+# %%
+df
+
+# %%
+# TODO Group by category to find the most sold product in each category
+
+
+v=df.groupby(['Category', 'Product'])\
+['Quantity Ordered'].sum().reset_index().sort_values(by=['Category', 'Quantity Ordered'], ascending=[True, False]).groupby('Category').head(1)
+
+
+v
+
+# %% [markdown]
+# ***
+# # 5. Bivariate Statistics: Exploring Correlations and Relationships
+# 
+# Bivariate analysis examines relationships between two variables to understand how different factors influence each other in business contexts. Sales data contains interconnected variables where correlation analysis reveals insights into customer behavior, pricing strategies, and market dynamics. This section focuses on visualizing these relationships to identify patterns that drive business performance.
+
+# %% [markdown]
+# ## 5.1 Continuous Variable Correlation Analysis
+# 
+# Correlation analysis between continuous variables reveals how two numerical factors influence each other in sales data. Understanding the relationship between price and quantity helps identify customer purchasing behavior patterns, pricing sensitivity, and bulk purchase trends. Regression plots provide visual correlation assessment while showing the strength and direction of linear relationships.
+# 
+# **Documentation references:**
+# - [sns.regplot()](https://seaborn.pydata.org/generated/seaborn.regplot.html) - Create regression plots with correlation visualization
+# - [Correlation analysis guide](https://seaborn.pydata.org/tutorial/regression.html) - Understanding relationships between variables
+# - [Statistical relationship visualization](https://matplotlib.org/stable/tutorials/introductory/pyplot.html)
+
+# %% [markdown]
+# **Exercise:** Visualize price-quantity correlation patterns
+# 
+# Customer purchasing behavior often shows correlations between product price and order quantity. Understanding this relationship reveals pricing sensitivity, bulk purchase patterns, and customer value perception. Regression plots effectively visualize these correlations while showing the strength of linear relationships between continuous variables.
+# 
+# Create a regression plot to examine the correlation between product price and quantity ordered. Use `sns.regplot()` with `Price_integer` on the x-axis and `Quantity Ordered` on the y-axis to visualize how price influences purchase quantity. The regression line will show the correlation direction and strength, revealing whether customers tend to order more or fewer items at different price points.
+
+# %%
+# TODO Set figure size
+# Plotting the correlation between Price and Quantity Ordered
+# Set title and labels
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+plt.figure(figsize=(10,6))
+
+sns.regplot(
+    data=df,
+    x='Price_integer',
+    y='Quantity Ordered',
+    scatter_kws= {'alpha' : 0.5}
+)
+
+
+plt.title ('Correlation between product price and quantity ordered', 
+           fontsize=14, pad=15)
+plt.xlabel ('product price (integer)', fontsize=12)
+plt.ylabel ('quantity ordered', fontsize=12)
+
+plt.tight_layout()
+plt.show()
+
+
+# %% [markdown]
+# **Exercise:** Create basic correlation matrix heatmap
+# 
+# Correlation matrices provide comprehensive visualization of relationships between multiple numerical variables simultaneously. Heatmaps represent correlation strength through color intensity, making it easy to identify strong positive and negative relationships at a glance.
+# 
+# Create a correlation heatmap for price and quantity variables that displays correlation coefficients with professional styling. Calculate the correlation matrix using `.corr()` on the selected variables, then use `sns.heatmap()` with annotations to show the numerical correlation values. Apply proper color mapping and formatting for clear interpretation.
+# 
+# **Documentation references:**
+# - [sns.heatmap()](https://seaborn.pydata.org/generated/seaborn.heatmap.html) - Create correlation heatmaps with customizable styling
+# - [pandas.DataFrame.corr()](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.corr.html) - Calculate correlation matrices between numerical columns
+# - [Seaborn color palettes](https://seaborn.pydata.org/tutorial/color_palettes.html) - Understanding color mapping for correlation visualization
+# 
+# Which correlation measure is used by default by `.corr()`? Is this choice relevant?
+
+# %%
+# TODO Prepare the correlation subset
+# Create the heatmap using diverging color palette RdBu_r
+
+corr_subset = df[['Price_integer', 'Quantity Ordered']]
+corr_mat = corr_subset.corr()
+
+plt.figure(figsize=(6,4))
+sns.heatmap(
+    corr_mat,
+    annot = True,
+    fmt= ".2f",
+    cmap="RdBu_r",
+    vmin= -1,
+    vmax=1,
+    linewidths= 0.5,
+    square= True
+)
+
+
+plt.title ('correlation matrix: price vs quantity ordered', fontsize=12, pad=15)
+plt.tight_layout()
+plt.show()
+
+# %% [markdown]
+# **Exercise:** Enhance correlation heatmap with statistical significance
+# 
+# Understanding the implementation of statistical significance calculation provides insights into correlation robustness. Building a custom correlation function with integrated p-value analysis demonstrates the mathematical foundation behind correlation analysis and enables deeper understanding of statistical validity through seamless visualization integration.
+# 
+# **Documentation references:**
+# - [scipy.stats.pearsonr()](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.pearsonr.html) - Calculate Pearson correlation coefficient and p-value
+# - [seaborn.heatmap() annot parameter](https://seaborn.pydata.org/generated/seaborn.heatmap.html#seaborn.heatmap) - Custom annotation matrices for enhanced visualization
+# - [Statistical significance interpretation](https://docs.scipy.org/doc/scipy/tutorial/stats.html#correlation-functions) - Understanding p-values in correlation analysis
+# 
+# *Step 1: Create the integrated correlation-significance function*
+# 
+# Statistical significance testing requires computing both correlation coefficients and p-values for each variable pair to determine if observed correlations could occur by random chance. The function creates a formatted matrix that combines correlation values with significance indicators, preparing data specifically for seaborn heatmap visualization.
+# 
+# Understanding heatmap annotation structure is crucial: while the main heatmap displays numeric correlation values for color mapping, the `annot` parameter accepts a separate matrix for text display. This separation allows us to show color-coded correlation strength while annotating with formatted strings that include significance stars.
+# 
+# Implement a function that creates a DataFrame of formatted strings matching the dimensions of your correlation matrix. Use nested loops to iterate through all variable pairs, applying `scipy.stats.pearsonr()` to calculate both correlation and significance, then format as strings with appropriate star notation for immediate interpretation.
+
+# %%
+# TODO Implement corr_with_significance function to create formatted correlation matrix
+def corr_with_significance(df):
+    from scipy import stats
+
+    """
+    Calculate correlation matrix with integrated statistical significance notation.
+    
+    This function computes both correlation coefficients and p-values for all 
+    variable pairs, returning a formatted matrix suitable for direct use in 
+    seaborn heatmap annotations. Each cell contains correlation value followed 
+    by significance stars, enabling immediate visual assessment of relationship 
+    strength and statistical validity.
+    
+    Parameters:
+    -----------
+    df : pandas.DataFrame
+        DataFrame containing numerical variables for correlation analysis.
+        All columns should be numeric types suitable for correlation calculation.
+        
+    Returns:
+    --------
+    pandas.DataFrame
+        Square matrix of formatted strings with same index/columns as input.
+        Each cell contains correlation coefficient followed by significance stars:
+        - "0.845***" indicates r=0.845 with p<0.001 (highly significant)
+        - "0.234*" indicates r=0.234 with p<0.05 (significant)
+        - "-0.123" indicates r=-0.123 with p>=0.05 (not significant)
+        
+    Matrix Structure:
+    ----------------
+    The returned DataFrame has dtype 'object' containing strings, not floats.
+    This structure is specifically designed for seaborn heatmap annotation:
+    - Main matrix: df.corr() provides numeric values for color mapping
+    - Annotation matrix: corr_with_significance() provides text for display
+    
+    Examples:
+    ---------
+    >>> df = pd.DataFrame({'A': [1,2,3,4], 'B': [2,4,6,8], 'C': [1,3,2,4]})
+    >>> result = corr_with_significance(df)
+    >>> print(result.iloc[0,1])  # "1.000***" (perfect positive correlation)
+    
+    Notes:
+    ------
+    - Diagonal elements show "1.000" (perfect self-correlation)
+    - Uses standard academic notation: *** p<0.001, ** p<0.01, * p<0.05
+    - Returns strings, not numeric values, for direct heatmap annotation
+    - Matrix dimensions match df.corr() for proper heatmap alignment
+    """
+    # Get column names and create result matrix
+    columns = df.columns
+    n_cols = len(columns)
+
+
+    # Initialize result DataFrame with object dtype for strings
+    result = pd.DataFrame(index=columns, columns=columns, dtype=object)
+
+
+    # Calculate correlation and significance for each pair
+    for i in range(n_cols):
+        for j in range(n_cols):
+            col_i=columns[i]
+            col_j=columns[j]
+                # Diagonal elements: perfect self-correlation
+            if i==j:
+                result.loc[col_i, col_j] = "1.000"
+                continue   
+                # Calculate Pearson correlation and p-value
+            valid_data = df[[col_i, col_j]].dropna()
+
+            if len(valid_data) < 2:
+                result.loc[col_i, col_j] = "NaN"
+                continue
+
+            r, p_val = stats.pearsonr(valid_data[col_i], valid_data[col_j])
+                # Determine significance level using standard thresholds
+            if p_val < 0.001:
+                stars = "**"
+            elif p_val < 0.01:
+                stars = "*"
+            else:
+                stars = ""
+                # Format as string with correlation coefficient and significance
+            result.loc[col_i, col_j] = f"{r:.3f}{stars}"
+    return result
+
+# %% [markdown]
+# *Step 2: Enhance your existing visualization with dual-matrix approach*
+# 
+# Now integrate the statistical significance information into your correlation heatmap using seaborn's dual-matrix capability. This approach maintains your existing color scheme based on correlation strength while overlaying significance information as text annotations.
+# 
+# The key insight is understanding how seaborn heatmap handles the `annot` parameter: when `annot=True`, it displays the numeric values from the main matrix with formatting controlled by `fmt`. However, when `annot` receives a separate matrix (like our formatted strings), it displays those strings directly, requiring `fmt=''` to prevent additional formatting attempts.
+# 
+# Replace your current correlation calculation with the enhanced function and modify the heatmap parameters to utilize both the numeric correlation matrix (for colors) and the formatted annotation matrix (for text display). This dual-matrix approach provides comprehensive correlation analysis in a single, scientifically rigorous visualization.
+# 
+# **Key Technical Understanding:**
+# - **Color mapping**: Driven by `df_qty_price.corr()` (numeric values)
+# - **Text display**: Driven by `correlation_with_sig` (formatted strings)  
+# - **Matrix alignment**: Both matrices must have identical dimensions and index/column labels
+# - **Format parameter**: `fmt=''` is mandatory when `annot` contains pre-formatted strings
+
+# %%
+# TODO Replace df_qty_price.corr() with corr_with_significance() and adjust heatmap parameters
+# Calculate correlation matrix with significance annotations
+corr_subset = df[['Price_integer', 'Quantity Ordered']]
+corr_mat = corr_subset.corr()
+
+corr_with_sig = corr_with_significance(corr_subset)
+
+plt.Figure(figsize=(8,6))
+
+sns.heatmap(
+    data = corr_mat,
+    annot = corr_with_sig,
+    fmt = '',
+    cmap = 'RdBu_r',
+    vmin = -1,
+    vmax=1,
+    linewidth = 0.5,
+    square=True
+)
+
+
+plt.title ("Enhanced correlation Heatmap", fontsize=12, pad=15)
+plt.tight_layout()
+plt.show()
+
+# %% [markdown]
+# ## 5.2 Distribution of quantitative data:  boxplots
+# 
+# A box plot (or box-and-whisker plot) shows the distribution of quantitative data in a way that facilitates comparisons between variables or across levels of a categorical variable. The box shows the quartiles of the dataset while the whiskers extend to show the rest of the distribution, except for points that are determined to be “outliers” using a method that is a function of the inter-quartile range. 
+# 
+# 
+# Boxplots are represented as follows: 
+# 
+# <img src="images/boxplot.png" width=700 height=700 />
+# 
+# **Documentation references**
+#  * [Understanding boxplots](https://towardsdatascience.com/understanding-boxplots-5e2df7bcbd51)
+#  * [Boxplot with seaborn](https://seaborn.pydata.org/generated/seaborn.boxplot.html)
+# 
+# 
+
+# %% [markdown]
+# **Exercise**: Create and interpret box plots for some variables. We are interested in understanding the distribution of prices in our sales dataset, both overall and by product category.
+
+# %%
+# TODO First visualization: Overall price distribution
+plt.Figure(figsize=(6,6))
+
+sns.boxplot(
+    data=df,
+    y='Price_integer',
+    color = 'skyblue',
+    width=0.4
+)
+
+plt.title('Overall product price distribution', fontsize=14, pad=15)
+plt.ylabel('Price (Integer)', fontsize=12)
+plt.xlabel("All Products", fontsize=12)
+
+plt.tight_layout()
+plt.show()
+
+# %%
+# TODO Second visualization: Price distribution by category
+plt.figure(figsize=(10,6))
+
+sns.boxplot(
+    data=df,
+    x='Category',
+    y='Price_integer',
+    palette='Set2'
+)
+
+plt.title ('Product Price Distribution', fontsize=14, pad=15)
+plt.xlabel('Product Category', fontsize=12)
+plt.ylabel('Price(Integer)', fontsize=12)
+
+plt.xticks(rotation=45, ha='right')
+
+plt.tight_layout()
+plt.show()
+
+
